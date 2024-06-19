@@ -28,7 +28,7 @@ export async function GET(request : Request){
             {$group : {_id : "$_id", messages : {$push : "$messages"}}}
         ])
 
-        if(!NewUser){
+        if(!NewUser || NewUser.length === 0){
             return Response.json({
                 success : false,
                 message : "user not found"
