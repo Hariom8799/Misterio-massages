@@ -40,6 +40,9 @@ export async function POST(request : Request){
                 existingUserByEmail.password = hashedPassword;
                 existingUserByEmail.verifyCode = verifyCode;
                 existingUserByEmail.verifyCodeExpiry = new Date(Date.now() + 3600000);
+                existingUserByEmail.username = username;
+
+                ///TODo Change username functionality 
 
                 await existingUserByEmail.save();
 
@@ -63,21 +66,22 @@ export async function POST(request : Request){
             })
 
             await newUser.save();
-
-            const emailResponse = await sendVerificationEmail(email,username,verifyCode);
-
-            if(!emailResponse.success){
-                return Response.json({
-                    success :false,
-                    message : emailResponse.message
-                },{status : 500} )
-            }
-
-            return Response.json({
-                success : true,
-                message : "User created successfully"
-            },{status : 200})
         }
+
+        const emailResponse = await sendVerificationEmail(email,username,verifyCode);
+
+        if(!emailResponse.success){
+            return Response.json({
+                success :false,
+                message : emailResponse.message
+            },{status : 500} )
+        }
+        
+
+        return Response.json({
+            success : true,
+            message : "User created successfully"
+        },{status : 200})
 
 
     } catch (error) {
