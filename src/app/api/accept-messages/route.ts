@@ -72,7 +72,7 @@ export async function GET(request : Request){
         return Response.json({
             success : true,
             message : "user found",
-            acceptMessages : foundUser.isAcceptingMessages
+            isAcceptingMessages : foundUser.isAcceptingMessages
             
         },{status : 200})
     } catch (error:any) {
