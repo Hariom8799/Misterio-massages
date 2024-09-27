@@ -8,6 +8,7 @@ import mongoose from "mongoose";
 export async function GET(request : Request){
     dbConnect();
     const session = await getServerSession(authOptions);
+    // console.log("Session in route:", session);
     const user : User = session?.user as User
 
     if(!session || !user){
@@ -22,10 +23,23 @@ export async function GET(request : Request){
     try {
 
         const NewUser = await userModel.aggregate([
-            {$match : {id : userId}},
-            {$unwind : "$messages"},
-            {$sort : {"messages.createdAt" : -1}},
-            {$group : {_id : "$_id", messages : {$push : "$messages"}}}
+            {$match : {_id : userId}},
+            { 
+                $addFields: { // Add a field to ensure the messages array is at least an empty array
+                    messages: { $ifNull: ["$messages", []] } 
+                }
+            },
+            { $unwind: { // Unwind messages, but preserve users with empty message arrays
+                path: "$messages",
+                preserveNullAndEmptyArrays: true
+            }},
+            { $sort: { "messages.createdAt": -1 } }, // Sort messages if they exist
+            { 
+                $group: { // Group messages back together
+                    _id: "$_id", 
+                    messages: { $push: "$messages" } 
+                } 
+            }
         ])
 
         if(!NewUser || NewUser.length === 0){

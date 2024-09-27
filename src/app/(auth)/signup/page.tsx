@@ -17,7 +17,7 @@ import { Input } from "@/components/ui/input"
 import { Loader2 } from "lucide-react"
 import { Button } from "@/components/ui/button"
 
-const page = () => {
+const Page = () => {
   const [username, setUsername] = useState('')  
   const [usernameMessage, setUsernameMessage] = useState('')
   const [isCheckingUsername, setIsCheckingUsername] = useState(false)
@@ -152,14 +152,21 @@ const page = () => {
             <Button type="submit" className="w-full" disabled={isSubmitting}>
               {isSubmitting ? <Loader2 className="animate-spin"/> : "Sign Up"}
             </Button>
-          
-
           </form>
-
         </Form>
+
+        <div className="text-center" >
+          <p>
+            Already have an account? 
+            <Link href="/signin">
+              <p className="text-blue-500">Login</p>
+            </Link>
+          </p>
+
+        </div>
       </div>
     </div>
   )
 }
 
-export default page
+export default Page

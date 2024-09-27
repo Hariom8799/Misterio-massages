@@ -7,6 +7,7 @@ import {
     CardHeader,
     CardTitle,
 } from "@/components/ui/card"
+import dayjs from 'dayjs';
 
 import {
     AlertDialog,
@@ -33,6 +34,7 @@ type MessageProps = {
 const MessageCard = ({message , onMessageDelete}: MessageProps) => {
 
     const {toast} = useToast();
+    // console.log(message);
 
     const handleDeleteMessage = async ()=>{
 
@@ -56,7 +58,10 @@ const MessageCard = ({message , onMessageDelete}: MessageProps) => {
   return (
     <Card>
         <CardHeader>
-            <CardTitle>Card Title</CardTitle>
+            <div className='flex justify-between items-center'>
+
+            
+            <CardTitle>{message.message}</CardTitle>
             <AlertDialog>
                 <AlertDialogTrigger asChild>
                     <Button variant="destructive"><X /></Button>
@@ -75,7 +80,11 @@ const MessageCard = ({message , onMessageDelete}: MessageProps) => {
                     </AlertDialogFooter>
                 </AlertDialogContent>
             </AlertDialog>
-            <CardDescription>Card Description</CardDescription>
+            {/* <CardDescription>Card Description</CardDescription> */}
+            </div>
+            <div className="text-sm">
+          {dayjs(message.createdAt).format('MMM D, YYYY h:mm A')}
+        </div>
         </CardHeader>
         <CardContent>
         </CardContent>

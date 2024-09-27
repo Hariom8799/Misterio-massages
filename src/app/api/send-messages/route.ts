@@ -3,9 +3,9 @@ import userModel from "@/models/User";
 import { Message } from "@/models/User";
 
 export async function POST(request :Request){
-    dbConnect();
+    await dbConnect();
     try {
-        const {content , username} = await request.json();
+        const { message, username } = await request.json();
 
         const user = await userModel.findOne({username})
 
@@ -23,7 +23,7 @@ export async function POST(request :Request){
             },{status : 400})
         }
 
-        const newMessage = {content, createdAt : new Date()}
+        const newMessage = {message, createdAt : new Date()}
         user.messages.push(newMessage as Message)
         await user.save();
 
@@ -32,11 +32,11 @@ export async function POST(request :Request){
             message : "message sent successfully"
         },{status : 200})
 
-    } catch (error) {
+    } catch (error :any) {
         console.log(error); 
         return Response.json({
             success : false,
-            message : "error in sending the message"
+            message : error.message || "error in sending the message"
         },{status : 500})
     }
 }

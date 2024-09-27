@@ -18,7 +18,7 @@ import { Button } from "@/components/ui/button"
 import { signInSchema } from "@/schemas/signInSchema";
 import { signIn } from "next-auth/react";
 
-const page = () => {
+const Page = () => {
   const [isSubmitting, setIsSubmitting] = useState(false)
   const {toast} = useToast();
   const router = useRouter();
@@ -34,8 +34,9 @@ const page = () => {
   
   const onSubmit = async (data : z.infer<typeof signInSchema>) =>{
     const result = await signIn('credentials',{
-        email : data.Identifier,
-        password : data.password
+      identifier: data.Identifier, // should match the identifier field expected in authorize function
+      password: data.password,
+      redirect: false
     })
 
     if(result?.error){
@@ -66,7 +67,7 @@ const page = () => {
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6 ">
             
             <FormField
-              name="identifier"
+              name="Identifier"
               control={form.control}
               render={({ field }) => (
                 <FormItem>
@@ -103,9 +104,19 @@ const page = () => {
           </form>
 
         </Form>
+
+        <div className="text-center" >
+          <p>
+            Dont have an account?{' '}
+            <Link href="/signup">
+              <p className="text-blue-500">Sign Up</p>
+            </Link>
+          </p>
+
+        </div>
       </div>
     </div>
   )
 }
 
-export default page
+export default Page

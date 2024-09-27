@@ -1,3 +1,4 @@
+'use client'
 import { useToast } from '@/components/ui/use-toast';
 import { Message } from '@/models/User'
 import { acceptMessageSchema } from '@/schemas/acceptMessageSchema';
@@ -27,7 +28,9 @@ const Page = () => {
     }))
   }
 
-  const {data : session} = useSession();
+  const {data : session , status} = useSession();
+
+  console.log("Session:", session);
 
   const form = useForm({
     resolver : zodResolver(acceptMessageSchema)
@@ -59,8 +62,9 @@ const Page = () => {
     setIsSwitchLoading(false);
     try {
       const response = await axios.get<ApiResponse>('/api/get-messages');
-      setMessages(response.data.Messages || []);
-
+      // console.log("Messages:", response.data.message);
+      setMessages(response.data.messages || []);
+      console.log("Messages:", messages);
       if(refresh){
         toast({
           title : "Messages refreshed",
@@ -85,7 +89,7 @@ const Page = () => {
     if(!session || !session.user) return 
     fetchAcceptMessage();
     fetchMessages();
-  },[fetchAcceptMessage,fetchMessages,session,setValue])
+  },[fetchAcceptMessage,fetchMessages,status,setValue])
 
   const handleAcceptMessages = async ()=>{
     try {

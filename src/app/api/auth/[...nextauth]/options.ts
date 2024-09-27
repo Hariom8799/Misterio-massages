@@ -17,15 +17,17 @@ export const authOptions : NextAuthOptions = {
             
             async authorize(credentials:any) : Promise<any>{
                 await dbConnect();
-
+                console.log("Credentials:", credentials);
                 try {
                     
                     const user = await userModel.findOne({
                         $or : [
-                            {email : credentials.identifier},
+                            {email : credentials.email},
                             {username : credentials.identifier}
                         ]
                     })
+
+                    console.log("User found:", user);
 
                     if(!user){
                         throw new Error("No user found");
@@ -36,6 +38,8 @@ export const authOptions : NextAuthOptions = {
                     }
 
                     const isPasswordCorrect = await bcrypt.compare(credentials.password , user.password);
+
+                    console.log("Is password correct:", isPasswordCorrect);
 
                     if(isPasswordCorrect){
                         return user;
