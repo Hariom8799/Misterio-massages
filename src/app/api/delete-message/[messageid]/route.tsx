@@ -4,7 +4,7 @@ import { getServerSession } from "next-auth";
 import {User } from 'next-auth';
 import { authOptions } from "../../auth/[...nextauth]/options";
 
-export async function GET(request : Request , {params} : {params : {messageid : string}}){
+export async function DELETE(request : Request , {params} : {params : {messageid : string}}){
     const messageId = params.messageid;
     dbConnect();
     const session = await getServerSession(authOptions);
@@ -18,11 +18,15 @@ export async function GET(request : Request , {params} : {params : {messageid : 
     }
 
     try {
+
+        console.log("user id is",user._id);
+        console.log("message id is",messageId);
         const updatedResult = await userModel.updateOne(
-            {_id : user.id},
+            {_id : user._id},
             {$pull : {messages : {_id : messageId}}}
         )
 
+        console.log(updatedResult);
         if(updatedResult.modifiedCount === 0){
             return Response.json({
                 success : false,
